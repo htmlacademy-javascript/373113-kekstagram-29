@@ -13,33 +13,28 @@ checkFunction('Проверяемая строка', 18);
 checkFunction('Проверяемая строка', 10);
 
 
-const checkPolindrom = function(string) {
-  const noWhiteSpace = string.replaceAll(' ', '');
-  const lengthString = noWhiteSpace.length;
-  const sameLetter = 3;
+let checkPolindrom = function(string) {
+  let noWhiteSpace = string.replaceAll(' ', '').toLowerCase();
+  let lengthString = noWhiteSpace.length;
+  let i = 0;
+  let counterSame = 0;
 
-  for (let i = 0; i < lengthString; i = i + 1) {
+  while (i < lengthString) {
+    if (noWhiteSpace[i] === noWhiteSpace[lengthString - 1 - i]) {
+      counterSame = counterSame + 1;
+    }
+    else {
+      break;
+    }
+    i = i + 1;
+  }
 
-    if (noWhiteSpace[i] === noWhiteSpace[lengthString - i]) {
-      sameLetter = 3;
-      consol.log(noWhiteSpace);
+  if (counterSame === lengthString) {
+      console.log('слово является полиндромом')
+  }
+  else {
+      console.log('слово не полиндром')
+  }
 }
 
-else {
-  sameLetter = 1;
-}
-}
-
-if (sameLetter = 0) {
-console.log('polygon');
-}
-
-else {
-console.log('noPoligon')
-}
-
-  console.log(noWhiteSpace);
-  console.log(lengthString);
-}
-
-checkPolindrom ('tot');
+checkPolindrom('Кекс')
