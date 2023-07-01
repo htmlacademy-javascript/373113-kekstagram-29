@@ -38,6 +38,7 @@ const MESSAGETEXT = [
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!',
 ];
 
+// Функция-генератор случайных чисел
 const getRandomInteger = (a, b) => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
@@ -45,72 +46,87 @@ const getRandomInteger = (a, b) => {
   return Math.floor(result);
 };
 
+// Функция-генератор последовательных чисел
 function createIdGenerator () {
   let lastGeneratedId = 0;
-
   return function () {
     lastGeneratedId += 1;
     return lastGeneratedId;
   };
 }
-const randomIdIndex = createIdGenerator ();
-const randomUrlIndex = createIdGenerator ();
-const randomIdComments = createIdGenerator ();
 
-const messagesMassive = [];
-const createMassiveMessages = () => {
-  const randomMessagesIndex = getRandomInteger(0, MESSAGETEXT.length - 1);
-  console.log('randomMessagesIndex = ' + randomMessagesIndex);
-  console.log(MESSAGETEXT[randomMessagesIndex]);
-  return MESSAGETEXT[randomMessagesIndex];
+const randomIdIndex = createIdGenerator (); // Генерируем случайное число ID
+const randomUrlIndex = createIdGenerator (); // Генерируем случайное число URL
+const randomIdComments = createIdGenerator (); // Генерируем случайное количество комментариев
+
+// Функция создания сообщений из предложений в комментариях
+const createMessages = () => {
+
+  // 1. Функция для выбора предложений из списка предложений
+  const createMassiveMessages = () => {
+    // Выбираем случайный номер предложения из списка предложений
+    const randomMessagesIndex = getRandomInteger(0, MESSAGETEXT.length - 1);
+    // Возвращаем элемент со случайным  номером выше из списка предложений
+    return MESSAGETEXT[randomMessagesIndex];
+  };
+
+  // Выводим количество предложений 1 или 2
+  const indexMessagesCount = getRandomInteger(1,2);
+  // Создаем массив для предложений
+  const messagesMassive = [];
+  // Добавляем в массив предложения с помощью функци 1.
+  for(let i = 0; i < indexMessagesCount; i++){
+    messagesMassive.push(createMassiveMessages());
+  }
+  // Проверяем чтобы предложения не были одинаковыми, если одинаковые удаляем второе проедложение
+  if(messagesMassive[0] === messagesMassive[1]) {
+    delete messagesMassive[1];
+  }
+
+  //Объединяем элементы из массива в одно предложение
+  const connectedMessages = messagesMassive.join(' ');
+  //Выводим получившееся предложение
+
+  return connectedMessages;
 };
-
-
-const indexMessagesCount = getRandomInteger(1,2);
-for(let i = 0; i < indexMessagesCount; i++){
-  console.log('indexMessagesCount' + indexMessagesCount);
-  messagesMassive.push(createMassiveMessages());
-}
-console.log (messagesMassive);
-
-if(messagesMassive[0] === messagesMassive[1]) {
-  delete messagesMassive[1];
-}
-
-console.log ('messagesMassive after slice' + messagesMassive);
-
-const connectedMessages = messagesMassive.join(' ');
-console.log(connectedMessages);
-
+//Функция для создания комментариев
 const createMassiveComments = () => {
+//Берем случайным номер аватарки
   const randomAvatarIndex = getRandomInteger(1, 6);
+
+  //Возвращаем объект - комментарий
   return {
     id: randomIdComments(),
     avatar: 'img/avatar-' + randomAvatarIndex,
-
+    message: createMessages(),
   };
 };
+const currentPhotoComments = () => {
+  const commentsMassive = [];
+  const randomCommentAmount = getRandomInteger(0, 30);
 
+  for(let i = 0; i < randomCommentAmount; i++) {
+    createMassiveComments();
+    commentsMassive.push(createMassiveComments());
+  }
+  return commentsMassive;
+};
 
 const createMassive = () => {
   const randomDescriptionsIndex = getRandomInteger(0, DESCRIPTIONS.length - 1);
   const randomLikesAmount = getRandomInteger(15, 200);
-  const randomCommentAmount = getRandomInteger(0, 30);
   return {
     id: randomIdIndex(),
     url: 'photos/' + randomUrlIndex() + '.jpg',
     description: DESCRIPTIONS[randomDescriptionsIndex],
     likes: randomLikesAmount,
-    comments: randomCommentAmount,
+    comments: currentPhotoComments(),
   };
 };
 const idMassive = [];
 
-for (let i = 0; i < 2; i++){
-
+for (let i = 0; i < 25; i++){
   idMassive.push(createMassive());
-  console.log('Проеряю выведет ли '+ idMassive[i].id);
+
 }
 console.log (idMassive);
-
-
