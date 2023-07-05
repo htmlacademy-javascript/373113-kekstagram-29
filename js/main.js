@@ -59,74 +59,73 @@ const randomIdIndex = createIdGenerator (); // Генерируем случай
 const randomUrlIndex = createIdGenerator (); // Генерируем случайное число URL
 const randomIdComments = createIdGenerator (); // Генерируем случайное количество комментариев
 
+ // 1. Функция для выбора предложений из списка предложений
+ const createArrMessages = () => {
+  // Выбираем случайный номер предложения из списка предложений
+  const randomMessagesIndex = getRandomInteger(0, MESSAGETEXT.length - 1);
+  // Возвращаем элемент со случайным  номером выше из списка предложений
+  return MESSAGETEXT[randomMessagesIndex];
+};
+
 // Функция создания сообщений из предложений в комментариях
 const createMessages = () => {
-
-  // 1. Функция для выбора предложений из списка предложений
-  const createMassiveMessages = () => {
-    // Выбираем случайный номер предложения из списка предложений
-    const randomMessagesIndex = getRandomInteger(0, MESSAGETEXT.length - 1);
-    // Возвращаем элемент со случайным  номером выше из списка предложений
-    return MESSAGETEXT[randomMessagesIndex];
-  };
-
+  createArrMessages();
   // Выводим количество предложений 1 или 2
   const indexMessagesCount = getRandomInteger(1,2);
   // Создаем массив для предложений
-  const messagesMassive = [];
+  const messagesArr = [];
   // Добавляем в массив предложения с помощью функци 1.
   for(let i = 0; i < indexMessagesCount; i++){
-    messagesMassive.push(createMassiveMessages());
+    messagesArr.push(createArrMessages());
   }
   // Проверяем чтобы предложения не были одинаковыми, если одинаковые удаляем второе проедложение
-  if(messagesMassive[0] === messagesMassive[1]) {
-    delete messagesMassive[1];
+  if(messagesArr[0] === messagesArr[1]) {
+    delete messagesArr[1];
   }
 
-  //Объединяем элементы из массива в одно предложение
-  const connectedMessages = messagesMassive.join(' ');
-  //Выводим получившееся предложение
+  //Объединяем элементы из массива в одно предложение и выводим получившееся предложение
 
-  return connectedMessages;
+  return messagesArr.join(' ');
 };
 //Функция для создания комментариев
-const createMassiveComments = () => {
+const createArrComments = () => {
 //Берем случайным номер аватарки
   const randomAvatarIndex = getRandomInteger(1, 6);
 
   //Возвращаем объект - комментарий
   return {
-    id: randomIdComments(),
+    id: createIdGenerator (),
     avatar: 'img/avatar-' + randomAvatarIndex,
     message: createMessages(),
   };
 };
 const currentPhotoComments = () => {
-  const commentsMassive = [];
+  const commentsArr = [];
   const randomCommentAmount = getRandomInteger(0, 30);
 
   for(let i = 0; i < randomCommentAmount; i++) {
-    createMassiveComments();
-    commentsMassive.push(createMassiveComments());
+    createArrComments();
+    commentsArr.push(createArrComments());
   }
-  return commentsMassive;
+  return commentsArr;
 };
 
-const createMassive = () => {
+const createArr = () => {
   const randomDescriptionsIndex = getRandomInteger(0, DESCRIPTIONS.length - 1);
   const randomLikesAmount = getRandomInteger(15, 200);
+
   return {
     id: randomIdIndex(),
-    url: 'photos/' + randomUrlIndex() + '.jpg',
+    url: 'photos/' + getRandomInteger(1,6) + '.jpg',
     description: DESCRIPTIONS[randomDescriptionsIndex],
     likes: randomLikesAmount,
     comments: currentPhotoComments(),
   };
 };
-const idMassive = [];
+const idArr = [];
 
 for (let i = 0; i < 25; i++){
-  idMassive.push(createMassive());
+  idArr.push(createArr());
 
 }
-console.log (idMassive);
+console.log (idArr);
