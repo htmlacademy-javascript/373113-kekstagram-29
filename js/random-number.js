@@ -1,3 +1,4 @@
+// Функция-генератор случайных чисел
 const getRandomInteger = (a, b) => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
@@ -5,4 +6,4 @@ const getRandomInteger = (a, b) => {
   return Math.floor(result);
 };
 
-export getRandomInteger();
+export {getRandomInteger};
