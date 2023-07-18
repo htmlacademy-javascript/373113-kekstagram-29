@@ -1,7 +1,7 @@
-import {getRandomInteger} from './random-number.js';
-import {getRandomArrayElement} from './random-array-element.js';
-import {createIdGenerator} from './unique-sequential-number.js';
-import {currentPhotoComments} from './data-comments.js';
+import {getRandomInteger} from './util.js';
+import {getRandomArrayElement} from './util.js';
+import {createIdGenerator} from './util.js';
+import {currentPhotoComments} from './util.js';
 
 const DESCRIPTIONS = [
   'альбомная',
@@ -52,3 +52,7 @@ for (let i = 0; i < 25; i++){
 
 }
 console.log (idArray);
+
+export{idArray};
+
+
