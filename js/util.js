@@ -96,5 +96,8 @@ const createMessages = () => {
   return messagesArray.join(' ');
 };
 
-export{createMessages};
+const isEscapeKey = (evt) => evt.key === 'Escape';
+
+
+export{createMessages, isEscapeKey};
 
