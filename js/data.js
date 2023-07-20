@@ -53,6 +53,13 @@ for (let i = 0; i < 25; i++){
 }
 console.log (idArray);
 
+for (let i = 0; i < idArray.length; i++){
+  // let commentsIdArray = idArray[i].comments;
+  for (let j = 0; j < idArray[i].comments.length; j++) {
+    console.log(idArray[i].comments[j].avatar);
+  }
+}
+
 export{idArray};
 
 
