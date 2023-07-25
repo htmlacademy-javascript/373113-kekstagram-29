@@ -8,8 +8,8 @@ const commentListElement = bigPictureElement.querySelector('.social__comments');
 const commentsLoaderElement = bigPictureElement.querySelector('.comments-loader');
 const bodyElement = document.querySelector('body');
 const cancelButtonElement = bigPictureElement.querySelector('.big-picture__cancel');
-const commentTemplteElement = document.querySelector('#comment').content;
-const commentElement = commentTemplteElement.querySelector('.social__comment');
+const commentTemplateElement = document.querySelector('#comment').content;
+const commentElement = commentTemplateElement.querySelector('.social__comment');
 
 let commentsShown = 0;
 let comments = [];
