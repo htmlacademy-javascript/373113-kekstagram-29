@@ -3,7 +3,6 @@ const COMMENTS_PER_PORTION = 5;
 const bigPictureElement = document.querySelector('.big-picture');
 const commentCountElement = bigPictureElement.querySelector('.comments-count');
 const commentsShownCountElement = bigPictureElement.querySelector('.comments-shown-count');
-
 const commentListElement = bigPictureElement.querySelector('.social__comments');
 const commentsLoaderElement = bigPictureElement.querySelector('.comments-loader');
 const bodyElement = document.querySelector('body');
