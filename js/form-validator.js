@@ -14,14 +14,13 @@ const pristine = new Pristine(imageUploadForm, {
   errorTextParent: 'img-upload__field-wrapper',
 });
 
-const normilize = (value) => {
-  const noNormilizeArray = value.trim().split(' ');
-  const normilizeArray = noNormilizeArray.filter((tag) => tag.length > 0);
-  return normilizeArray;
+const normalize = (value) => {
+  const noNormalizeArray = value.trim().split(' ');
+  return noNormalizeArray.filter((tag) => tag.length > 0);
 };
 
 
-const isValidateTextHashtag = (textHashtag) => normilize(textHashtag).every((tag) => VALID_SYMBOLS.test(tag));
+const isValidateTextHashtag = (textHashtag) => normalize(textHashtag).every((tag) => VALID_SYMBOLS.test(tag));
 
 pristine.addValidator(
   formHashtag,
@@ -29,7 +28,7 @@ pristine.addValidator(
   'Хэштег должен начинаться с #, состоять из букв и чисел и содержать 20 символов, включая #'
 );
 
-const isValidCountHashtag = (textHashtag) => normilize(textHashtag).length <= MAX_HASHTAG_COUNT;
+const isValidCountHashtag = (textHashtag) => normalize(textHashtag).length <= MAX_HASHTAG_COUNT;
 
 pristine.addValidator(
   formHashtag,
@@ -38,7 +37,7 @@ pristine.addValidator(
 );
 
 const isUniqueHashtag = (textHashtag) => {
-  const lowerCase = normilize(textHashtag).map((tag) => tag.toLowerCase());
+  const lowerCase = normalize(textHashtag).map((tag) => tag.toLowerCase());
   return lowerCase.length === new Set(lowerCase).size;
 };
 
