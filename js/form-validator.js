@@ -2,12 +2,18 @@ const MAX_HASHTAG_COUNT = 5;
 const MAX_DESCRIPTION_LENGTH = 140;
 const VALID_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;
 
+const ErrorText = {
+  INVALID_COUNT: `Максимум ${MAX_HASHTAG_COUNT} хэштегов`,
+  NOT_UNIQUE: 'Хэштеги должны быть уникальными',
+  INVALID_PATTERN: 'Хэштег должен начинаться с #, состоять из букв и чисел и содержать 20 символов, включая #',
+};
+
 import {onDocumentKeydown} from './form.js';
 
 const imageUploadForm = document.querySelector('.img-upload__form');
 const imageUploadText = document.querySelector('.img-upload__text');
-const formHashtag = imageUploadText.querySelector('.text__hashtags');
-const formDescription = imageUploadText.querySelector ('.text__description');
+const textHashtags = imageUploadText.querySelector('.text__hashtags');
+const textDescription = imageUploadText.querySelector ('.text__description');
 
 const pristine = new Pristine(imageUploadForm, {
   classTo: 'img-upload__field-wrapper',
@@ -23,17 +29,17 @@ const normalize = (value) => {
 const isValidateTextHashtag = (textHashtag) => normalize(textHashtag).every((tag) => VALID_SYMBOLS.test(tag));
 
 pristine.addValidator(
-  formHashtag,
+  textHashtags,
   isValidateTextHashtag,
-  'Хэштег должен начинаться с #, состоять из букв и чисел и содержать 20 символов, включая #'
+  ErrorText.INVALID_PATTERN,
 );
 
 const isValidCountHashtag = (textHashtag) => normalize(textHashtag).length <= MAX_HASHTAG_COUNT;
 
 pristine.addValidator(
-  formHashtag,
+  textHashtags,
   isValidCountHashtag,
-  'Максимальное количество хэштегов - 5'
+  ErrorText.INVALID_COUNT,
 );
 
 const isUniqueHashtag = (textHashtag) => {
@@ -42,15 +48,15 @@ const isUniqueHashtag = (textHashtag) => {
 };
 
 pristine.addValidator(
-  formHashtag,
+  textHashtags,
   isUniqueHashtag,
-  'Хэштеги должны быть уникальными'
+  ErrorText.NOT_UNIQUE,
 );
 
-const checkDescriptionLength = (textDescription) => textDescription.length <= MAX_DESCRIPTION_LENGTH;
+const checkDescriptionLength = (checkTextDescription) => checkTextDescription.length <= MAX_DESCRIPTION_LENGTH;
 
 pristine.addValidator(
-  formDescription,
+  textDescription,
   checkDescriptionLength,
   'Длина должна быть меньше 140 символов'
 );
@@ -63,7 +69,7 @@ const cancelEsc = (item) => {
     window.addEventListener('keydown', onDocumentKeydown);
   });
 };
-cancelEsc(formHashtag);
-cancelEsc(formDescription);
+cancelEsc(textHashtags);
+cancelEsc(textDescription);
 
 export {imageUploadForm, pristine};
