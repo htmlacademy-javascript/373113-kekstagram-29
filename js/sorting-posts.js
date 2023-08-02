@@ -14,7 +14,6 @@ let currentFilter = imageFilterDefault.id;
 let discussedData;
 let randomData;
 
-// <По умолчанию — фотографии в изначальном порядке с сервера(data)
 // <Случайные — 10 случайных, не повторяющихся фотографий>
 const createRandomData = () => {
   if (data !== undefined) {
@@ -50,8 +49,7 @@ const renderPosts = () => {
   }
 };
 
-// «устранение дребезга», чтобы при переключении фильтра обновление списка элементов,
-// подходящих под фильтры, происходило не чаще, чем один раз в полсекунды.
+// «устранение дребезга»
 const renderDebounce = debounce(() => {
   renderPosts();
 }, RERENDER_DELAY);
