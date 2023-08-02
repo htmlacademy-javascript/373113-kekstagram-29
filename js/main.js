@@ -1,8 +1,7 @@
-import { getPictures } from './data.js';
-import { renderGallery } from './gallery.js';
+import './render-miniature-photos.js';
+import './actions-modal.js';
 import './form.js';
 import './form-validator.js';
-
-renderGallery(getPictures());
-
-
+import './form-message.js';
+import { renderSortedPosts } from './sorting-posts.js';
+renderSortedPosts();
