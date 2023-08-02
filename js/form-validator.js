@@ -1,67 +1,56 @@
-const MAX_HASHTAG_COUNT = 5;
-const MAX_DESCRIPTION_LENGTH = 140;
-const VALID_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;
-
-const ErrorText = {
-  INVALID_COUNT: `Максимум ${MAX_HASHTAG_COUNT} хэштегов`,
-  NOT_UNIQUE: 'Хэштеги должны быть уникальными',
-  INVALID_PATTERN: 'Хэштег должен начинаться с #, состоять из букв и чисел и содержать 20 символов, включая #',
-};
-
 import {onDocumentKeydown} from './form.js';
+
+const MAX_HASHTAG_COUNT = 5;
+const VALID_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;
 
 const imageUploadForm = document.querySelector('.img-upload__form');
 const imageUploadText = document.querySelector('.img-upload__text');
-const textHashtags = imageUploadText.querySelector('.text__hashtags');
-const textDescription = imageUploadText.querySelector ('.text__description');
+const formHashtag = imageUploadText.querySelector('.text__hashtags');
+const formDescription = imageUploadText.querySelector ('.text__description');
 
 const pristine = new Pristine(imageUploadForm, {
   classTo: 'img-upload__field-wrapper',
   errorTextParent: 'img-upload__field-wrapper',
 });
 
-const normalize = (value) => {
-  const noNormalizeArray = value.trim().split(' ');
-  return noNormalizeArray.filter((tag) => tag.length > 0);
+const normalizeString = (value) => {
+  const noNormalizedArray = value.trim().split(' ');
+  const normalizedArray = noNormalizedArray.filter((tag) => tag.length > 0);
+  return normalizedArray;
 };
 
-
-const isValidateTextHashtag = (textHashtag) => normalize(textHashtag).every((tag) => VALID_SYMBOLS.test(tag));
+// Для разных ошибок показываются разные сообщения. Следует разделять случаи, когда:
+// 1. введён невалидный хэш-тег;
+const isValidateTextHashtag = (textHashtag) => normalizeString(textHashtag).every((tag) => VALID_SYMBOLS.test(tag));
 
 pristine.addValidator(
-  textHashtags,
+  formHashtag,
   isValidateTextHashtag,
-  ErrorText.INVALID_PATTERN,
+  'Хэштег должен начинаться с #, состоять из букв и чисел и содержать 20 символов, включая #'
 );
 
-const isValidCountHashtag = (textHashtag) => normalize(textHashtag).length <= MAX_HASHTAG_COUNT;
+// 2. превышено количество хэш-тегов;
+const isValidCountHashtag = (textHashtag) => normalizeString(textHashtag).length <= MAX_HASHTAG_COUNT;
 
 pristine.addValidator(
-  textHashtags,
+  formHashtag,
   isValidCountHashtag,
-  ErrorText.INVALID_COUNT,
+  'Максимальное количество хэштегов - 5'
 );
 
+// 3. хэш-теги повторяются.
 const isUniqueHashtag = (textHashtag) => {
-  const lowerCase = normalize(textHashtag).map((tag) => tag.toLowerCase());
+  const lowerCase = normalizeString(textHashtag).map((tag) => tag.toLowerCase());
   return lowerCase.length === new Set(lowerCase).size;
 };
 
 pristine.addValidator(
-  textHashtags,
+  formHashtag,
   isUniqueHashtag,
-  ErrorText.NOT_UNIQUE,
+  'Хэштеги должны быть уникальными'
 );
 
-const checkDescriptionLength = (checkTextDescription) => checkTextDescription.length <= MAX_DESCRIPTION_LENGTH;
-
-pristine.addValidator(
-  textDescription,
-  checkDescriptionLength,
-  'Длина должна быть меньше 140 символов'
-);
-
-const cancelEsc = (item) => {
+const calcelEsc = (item) => {
   item.addEventListener('focus', () => {
     window.removeEventListener('keydown', onDocumentKeydown);
   });
@@ -69,7 +58,7 @@ const cancelEsc = (item) => {
     window.addEventListener('keydown', onDocumentKeydown);
   });
 };
-cancelEsc(textHashtags);
-cancelEsc(textDescription);
+calcelEsc(formHashtag);
+calcelEsc(formDescription);
 
 export {imageUploadForm, pristine};
