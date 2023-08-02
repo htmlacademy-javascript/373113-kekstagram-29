@@ -24,11 +24,10 @@ const createRandomData = () => {
 };
 randomData = createRandomData();
 
-// <Обсуждаемые — фотографии, отсортированные в порядке убывания количества комментариев>
+// <Обсуждаемые — сортировка в порядке убывания количества комментариев>
 const createDiscussedData = () => {
   if (data !== undefined) {
     const comparePosts = (postA, postB) => postB.comments.length - postA.comments.length;
-    // Показываем сначала посты с большим количеством комметариев
     discussedData = data.slice().sort(comparePosts);
   }
   return discussedData;
