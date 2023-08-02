@@ -23,7 +23,6 @@ const onLoadButtonClick = () => renderSomeComment();
 // <Закрытие модального окна>
 const closeModal = () => {
   bigPhotoModal.classList.add('hidden');
-  // Так как модальное окно закрыто, обработчик нам не нужен, поэтому удаляем его
   window.removeEventListener('keydown', onDocumentKeydown);
   commentsLoader.removeEventListener('click', onLoadButtonClick);
   document.body.classList.remove('modal-open');
