@@ -1,3 +1,28 @@
+const ALERT_SHOW_TIME = 5000;
+const FILTER_SHOW_PHOTO = 10;
+
+// Показываем ошибку
+const showAlert = (message) => {
+  const notice = document.createElement('div');
+  notice.style.position = 'absolute';
+  notice.style.zIndex = '100';
+  notice.style.top = '0';
+  notice.style.padding = '10px 3px';
+  notice.style.fontSize = '20px';
+  notice.style.textAlign = 'center';
+  notice.style.background = 'red';
+  notice.textContent = message;
+  document.body.append(notice);
+
+  setTimeout (() => {
+    notice.remove();
+  }, ALERT_SHOW_TIME);
+};
+
+// Проверка, является ли нажатая кнопка Esc
+const isEscapeKey = (evt) => evt.key === 'Escape';
+
+// Генерация случайного числа в диапазоне
 const getRandomInteger = (a, b) => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
@@ -5,10 +30,49 @@ const getRandomInteger = (a, b) => {
   return Math.floor(result);
 };
 
-const getRandomArrayElement = (items) =>
-  items[getRandomInteger(0, items.length - 1)];
+// Генерация массива неповторяющихся чисел
+const generateArrayUniqueNumbers = (a, b) => {
+  const numbers = [];
+  while (numbers.length < FILTER_SHOW_PHOTO) {
+    const randomNumber = getRandomInteger(a, b);
+    let found = false;
+    for (let i = 0; i < numbers.length; i++) {
+      if (numbers[i] === randomNumber){
+        found = true;
+        break;
+      }
+    }
+    if (!found) {
+      numbers[numbers.length] = randomNumber;
+    }
+  }
+  return numbers;
+};
 
-// Проверка, является ли нажатая кнопка Esc
-const isEscapeKey = (evt) => evt.key === 'Escape';
+// Генерируем 10 неповторяющихся чисел от 0 до 24
+const randomNumbers = generateArrayUniqueNumbers(0, 24);
+const createRandomPosts = (array) => {
+  const randomPosts = [];
+  for (let i = 0; i < randomNumbers.length; i++) {
+    const posts = array.find((post) => randomNumbers[i] === post.id);
+    randomPosts.push(posts);
+  }
+  return randomPosts;
+};
 
-export {getRandomInteger, getRandomArrayElement, isEscapeKey};
+// «устранение дребезга»
+function debounce (callback, timeoutDelay) {
+  let isCooldown = false;
+  return function() {
+    if (isCooldown) {
+      return;
+    }
+    callback.apply(this, arguments);
+    isCooldown = true;
+    setTimeout(() => {
+      isCooldown = false;
+    }, timeoutDelay);
+  };
+}
+
+export {createRandomPosts, showAlert, isEscapeKey, debounce};

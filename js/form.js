@@ -1,3 +1,4 @@
+// Форма загрузки фотографии
 import {isEscapeKey} from './util.js';
 import {pristine} from './form-validator.js';
 import {changeOriginalEffect, onEffectListChange} from './form-slider.js';
@@ -5,89 +6,88 @@ import {changeOriginalEffect, onEffectListChange} from './form-slider.js';
 const SCALE_STEP = 25;
 const SCALE_MIN = 25;
 const SCALE_MAX = 100;
-const DEFAULT_SCALE = 100;
 const FILE_TYPES = ['jpg', 'jpeg', 'png'];
+const DIVISION_NUMBERS = 100;
 
 
-const body = document.querySelector('body');
+// Форма
 const imageUploadForm = document.querySelector('.img-upload__form');
-const imgUploadInput = document.querySelector('.img-upload__input');
-const imgUploadOverlay = document.querySelector('.img-upload__overlay');
-const imgUploadCancel = document.querySelector('.img-upload__cancel');
+const imageUploadInput = document.querySelector('.img-upload__input');
+const formEditor = document.querySelector('.img-upload__overlay');
+const uploadCancelButton = document.querySelector('.img-upload__cancel');
+const effecstList = document.querySelector('.effects__list');
 
-
-const effectstList = document.querySelector('.effects__list');
-
-const imgUploadPreview = document.querySelector('.img-upload__preview');
-const preview = imgUploadPreview.querySelector('img');
+// Загрузка изображения пользователя
+const fileChooser = document.querySelector('.img-upload__input');
+const scaleImage = document.querySelector('.img-upload__preview');
+const preview = scaleImage.querySelector('img');
 const smallPreviews = document.querySelectorAll('.effects__preview');
 
+// <Масштаб изображения>
 const scaleSmaller = document.querySelector('.scale__control--smaller');
 const scaleBigger = document.querySelector('.scale__control--bigger');
 const scaleValue = document.querySelector('.scale__control--value');
 
+let scaleNumber;
 
-const scaleImage = (value) => {
-  preview.style.transform = `scale(${value / 100})`;
-  scaleValue.value = `${value}%`;
-};
+// <Масштаб изображения>
+// Получаем число из строки
+const getScaleNumber = (scaleString) => parseInt(scaleString.value, 10);
 
 // Уменьшение изображения
 const onMinButtonClick = () => {
-  const currentValue = parseInt(scaleValue.value, 10);
-  const newValue = currentValue - SCALE_STEP;
-  if (newValue < SCALE_MIN){
-    scaleImage(SCALE_MIN);
-  } else {
-    scaleImage(newValue);
+  scaleNumber = getScaleNumber(scaleValue);
+  if(scaleNumber > SCALE_MIN) {
+    scaleValue.value = `${scaleNumber - SCALE_STEP}%`;
+    preview.style.transform = `scale(${(scaleNumber - SCALE_STEP) / DIVISION_NUMBERS})`;
   }
 };
 
 // Увеличение изображения
 const onMaxButtonClick = () => {
-  const currentValue = parseInt(scaleValue.value, 10);
-  const newValue = currentValue + SCALE_STEP;
-  if (newValue > SCALE_MAX){
-    scaleImage(SCALE_MAX);
-  } else {
-    scaleImage(newValue);
+  scaleNumber = getScaleNumber(scaleValue);
+  if(scaleNumber < SCALE_MAX) {
+    scaleValue.value = `${scaleNumber + SCALE_STEP}%`;
+    preview.style.transform = `scale(${(scaleNumber + SCALE_STEP) / DIVISION_NUMBERS})`;
   }
 };
 
+// <Открытие формы>
 const openForm = () => {
-  imgUploadOverlay.classList.remove('hidden');
-  body.classList.add('modal-open');
-  imgUploadCancel.addEventListener('click', onCloseButtonClick);
-  document.addEventListener('keydown', onDocumentKeydown);
+  formEditor.classList.remove('hidden');
+  document.body.classList.add('modal-open');
+  uploadCancelButton.addEventListener('click', onCloseButtonClick);
+  window.addEventListener('keydown', onDocumentKeydown);
   scaleSmaller.addEventListener('click', onMinButtonClick);
   scaleBigger.addEventListener('click', onMaxButtonClick);
   changeOriginalEffect();
-  effectstList.addEventListener('change', onEffectListChange);
+  effecstList.addEventListener('change', onEffectListChange);
 };
 
-imgUploadInput.addEventListener('change', () => {
+imageUploadInput.addEventListener('change', () => {
   openForm();
 });
 
-const resetScale = () => scaleImage(DEFAULT_SCALE);
+// <Закрытие формы>
 const closeForm = () => {
-  imageUploadForm.reset();
-  pristine.reset();
-  resetScale();
-  imgUploadPreview.style.transform = '';
-  imgUploadOverlay.classList.add('hidden');
-  body.classList.remove('modal-open');
-  imgUploadCancel.removeEventListener('click', onCloseButtonClick);
+  formEditor.classList.add('hidden');
+  document.body.classList.remove('modal-open');
+  uploadCancelButton.removeEventListener('click', onCloseButtonClick);
   window.removeEventListener('keydown', onDocumentKeydown);
   scaleSmaller.removeEventListener('click', onMinButtonClick);
   scaleBigger.removeEventListener('click', onMaxButtonClick);
-  effectstList.removeEventListener('change', onEffectListChange);
+  effecstList.removeEventListener('change', onEffectListChange);
+  imageUploadForm.reset();
+  pristine.reset();
+  preview.style.transform = `scale(${SCALE_MAX / DIVISION_NUMBERS})`;
 };
 
+// Функция закрытия формы по клику на крестик
 function onCloseButtonClick () {
   closeForm ();
 }
 
+// Функция закрытия формы по кнопке ESС
 function onDocumentKeydown (evt) {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
@@ -95,8 +95,9 @@ function onDocumentKeydown (evt) {
   }
 }
 
-imgUploadInput.addEventListener('change', () => {
-  const file = imgUploadInput.files[0];
+// Загрузка изображения пользователя
+fileChooser.addEventListener('change', () => {
+  const file = fileChooser.files[0];
   const fileName = file.name.toLowerCase();
   const matches = FILE_TYPES.some((type) => fileName.endsWith(type));
   if (matches) {
@@ -108,4 +109,3 @@ imgUploadInput.addEventListener('change', () => {
 });
 
 export {onDocumentKeydown, closeForm};
-
